@@ -22,7 +22,13 @@ const HelloWorldIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
     },
     async handle(handlerInput) {
-        const speakOutput = await getCommits();
+        const commits = await getCommits();
+        let speakOutput;
+        if (commits.length > 0){
+            speakOutput = 'yes!'
+        } else {
+            speakOutput = 'no'
+        }
         return handlerInput.responseBuilder
             .speak(speakOutput)
             //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
