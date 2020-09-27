@@ -3,6 +3,7 @@ const getCommits = require('./getCommits')
 
 async function testGetCommitsTruthy() {
     let result = await getCommits("sblack4")
+    console.log(result)
     assert(result)
 }
 
@@ -14,4 +15,4 @@ async function testGetCommitsTruthy() {
 // }
 
 testGetCommitsTruthy()
-testGetCommitsGets()
+// testGetCommitsGets()

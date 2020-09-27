@@ -1,23 +1,31 @@
 const { Octokit } = require("@octokit/core");
 
-module.exports = async function getCommits(username, date = Date.now()) {
-    const octokit = new Octokit()
+module.exports = function getCommits(username, date = Date.now()) {
 
-    // let username = "sblack4"
-    let resp = await octokit.request('GET /users/{username}/events', {
+  return new Promise((resolve, reject) => {
+    const now = new Date(date)
+    const octokit = new Octokit()
+    let resp = octokit.request('GET /users/{username}/events', {
         username: username
       })
 
-    const now = new Date(date)
+    resp.then((data) => {
+      console.log(data)
+      const pushEvents = data.data.filter(x => x.type == 'PushEvent')
+                              .filter(x => {
+                                const jsDate = new Date(Date.parse(x.created_at))
 
-    const pushEvents = resp.data.filter(x => x.type == 'PushEvent')
-                                .filter(x => {
-                                  const jsDate = new Date(Date.parse(x.created_at))
-                                  
-                                  return jsDate.getFullYear() == now.getFullYear()
-                                    && jsDate.getMonth() == now.getMonth()
-                                    && jsDate.getDate() == now.getDate()
-                                })
+                                return jsDate.getFullYear() == now.getFullYear()
+                                  && jsDate.getMonth() == now.getMonth()
+                                  && jsDate.getDate() == now.getDate()
+                              })
 
-    return pushEvents;
+      resolve(pushEvents)
+    })
+
+    resp.catch((err) => {
+      reject(err)
+    })
+
+  })
 }
