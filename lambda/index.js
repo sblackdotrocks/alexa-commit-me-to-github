@@ -22,7 +22,8 @@ const HelloWorldIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
     },
     async handle(handlerInput) {
-        const commits = await getCommits("sblack4");
+        let username = "sblack4"
+        const commits = await getCommits(username);
         let speakOutput;
         if (commits.length > 0){
             speakOutput = 'yes!'
